@@ -55,4 +55,24 @@ router.get("/users", async (req: Request, res: Response) => {
     res.json({ users: data.users });
 });
 
+// Update user
+router.put("/update/:id", async (req: Request, res: Response) => {
+    const userId = req.params.id;
+    const { email, displayName } = req.body;
+
+    const { data, error } = await supabase.auth.admin.updateUserById(userId, {
+        email,
+        user_metadata: {
+            display_name: displayName,
+        },
+    });
+
+    if (error) {
+        return res.status(400).json({ error: error.message });
+    }
+
+    res.json({ user: data.user });
+});
+
+
 export default router;
